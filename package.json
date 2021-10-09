@@ -1,0 +1,36 @@
+{
+	"name": "pure-js-ray-tracing",
+	"version": "1.0.0",
+	"description": "Vandy Hacks 2021",
+	"main": "main.js",
+	"dependencies": {
+	  "body-parser": "^1.19.0",
+	  "express": "^4.17.1",
+	  "js-cookie": "^2.2.1",
+	  "mongodb": "^3.6.6",
+	  "node": "^16.0.0",
+	  "sweetalert": "^2.1.2",
+	  "twitter": "^1.7.1",
+	  "twitter-node-client": "^0.0.6",
+	  "uuid": "^8.3.2"
+	},
+	"engines": {
+	  "npm": "6.14.12"
+	},
+	"devDependencies": {},
+	"scripts": {
+	  "start": "node main.js",
+	  "test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+	  "type": "git",
+	  "url": "git+https://github.com/timseifer/SubmitAGripe.git"
+	},
+	"author": "Tim Seifert & Team",
+	"license": "ISC",
+	"bugs": {
+	  "url": "https://github.com/timseifer/SubmitAGripe/issues"
+	},
+	"homepage": "https://github.com/timseifer/SubmitAGripe#readme"
+  }
+  
