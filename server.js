@@ -38,21 +38,6 @@ app.post("/draw_ppm", function(req,res){
 	// tweets(userid, res);
 });
 
-var mongo = require('mongodb');
-const { SSL_OP_NO_QUERY_MTU } = require("constants");
-var MongoClient = mongo.MongoClient;
-const url = "mongodb+srv://userdb1:93611Tim@cluster0.om7kz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-var mongodb;
-MongoClient.connect(url, {useUnifiedTopology: true, poolSize: 10},function(err, db){
-	if(err){
-		console.log(err);
-		return;
-	}
-	mongodb = db;
-console.log("success");
-
-});
-
 
 
 class vector{
