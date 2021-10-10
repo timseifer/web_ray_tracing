@@ -8,29 +8,365 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
+	<script type="text/javascript" src="utility.js"></script>
+	<script type="text/javascript" src="server.js"></script>
+	<link rel="stylesheet" href="index.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100&display=swap" rel="stylesheet">
 </head> 
 
-<body>
-<div>
-	bearings are straight
-	<button onclick="fetchdata()">
-	</button>
-	<div id="#response">
-	</div>
+<body id="background">
+
+<h1>
+	Pure JS/HTML Ray Tracer
+</h1>	
+<div id="explanation_smaller">
+	By: Tim Seifert
 </div>
+<div id="explanation">
+	The animations and images depicted on this website are the result of utilzing canvas objects with ray tracing techniques. All of the functions used to make the images are coded through JS functions. Ray Tracing is typically done in C++ due to ease of use in overloading variable names/functions and having more access to memory. None of the generated depictions are the result of a png displays or CSS animations. They are rgb arrays utilzing the PPM format of canvas objects. The website does not use webGL or any other external API to do the calculations necessary for ray tracing. All the linear algebra was done in house by me :). Click your way through to actively ray trace!
+</div>
+<section>
+<div id="resp">
+</div>
+<!-- <button onclick="draw_image()">
+</button>
+<canvas id="canvas">
+</canvas>
+<canvas id="smoothed-zoom">
+</canvas>
+<canvas id="pixelated-zoom">
+</canvas> -->
+
+<button onclick="ppm_rand_to_canvas('rand')">
+	We Start With A Random Big Array of Pixels
+</button>
+<br>
+<canvas id="rand">
+</canvas>
+<div id = "explanation">
+	While this is cool and all, let's add some order to our life. But, go ahead and click the random button a couple more times just to see the array produce some more cool random noise :).
+</div>
+<div id="rgb_color">
+</div>
+
+<button onclick="ppm_order_to_canvas('ppm_order')">
+	We Add Some Order to The Array
+</button>
+<br>
+<canvas id="ppm_order">
+</canvas>
+
+<div id = "explanation">
+	As we walk over the empty array, we use the index to cascade the RGB values. This makes a really cool tye dye esque depiction.
+</div>
+
+<div id="rgb_color_four">
+</div>
+
+<button onclick="draw_ppm_img(0,'ppm')">
+	Introducing The Pinhole Projection Camera
+</button>
+<br>
+<canvas id="ppm">
+</canvas>
+<div id = "explanation">
+	Woah, now that's cool. No type deffing, no overloading variables, just pure JS functions and Ray Casting. The math that goes behind this includes the sphere ray intersection, vector multiplication (addition, subtraction, etc.), and 3D coordinates.
+</div>
+
+
+<div id="rgb_color_two">
+</div>
+
+<button onclick="move_ppm()">
+	Let's Move the Circle
+</button>
+<br>
+<canvas id="ppm_moving">
+</canvas>
+
+<div id = "explanation">
+	Now that we have a virtual scene setup, moving the object around becomes relatively easy to do. Since we are working in an x,y,z space we can iteratively manipulate the circle position to move in different directions.
+</div>
+
+<div id="rgb_color_three">
+</div>
+
+
+<div id="explanation">
+	Thanks For Reading :)
+</div>
+</section>
+
+
+<script>
+	//simply move the red dot around through a hard code of the movement
+	function move_ppm(){
+		const task = async () => {
+		draw_ppm_img(0,'ppm_moving');
+		for(var i =0; i> -3; i-=.1){
+		await new Promise(r => setTimeout(r, 100));
+		draw_ppm_img(i,'ppm_moving');
+		}
+		}
+		task();
+	}
+
+</script>
 <script>
 	function fetchdata(){
 	$.ajax({
 	url: '/response',
-	type: 'get',
+	type: 'post',
 	data: '',
 	success: function(response){
-		console.log(response);
-		$("#response").html(response);
-		
+		console.log(response)
+		var text = $('#resp').text()
+		console.log(text)
+		$("#resp").text(response);	
 	}
 	});
+}
+</script>
+
+<script>
+	function draw_ppm_img(mov, id){
+	$.ajax({
+	url: '/draw_ppm',
+	type: 'post',
+	data: {
+		movement: mov,
+	},
+	success: function(response){
+		console.log("success, here is the response")
+		console.log(response)
+		ppm_Array_to_canvas(response, id)
+	}
+	});
+}
+</script>
+
+
+<script>
+
+$('#ppm_moving').mousemove(function(e) {
+    var pos = findPos(this);
+    var x = e.pageX - pos.x;
+    var y = e.pageY - pos.y;
+    var coord = "x=" + x + ", y=" + y;
+    var c = this.getContext('2d');
+    var p = c.getImageData(x, y, 1, 1).data; 
+    var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+    $('#rgb_color_three').html(coord + "<br>" + hex +"<br>" +p[0] + " " + [1]+ " " +p[2]);
+	});
+
+	$('#ppm').mousemove(function(e) {
+    var pos = findPos(this);
+    var x = e.pageX - pos.x;
+    var y = e.pageY - pos.y;
+    var coord = "x=" + x + ", y=" + y;
+    var c = this.getContext('2d');
+    var p = c.getImageData(x, y, 1, 1).data; 
+    var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+    $('#rgb_color_two').html(coord + "<br>" + hex +"<br>" +p[0] + " " + [1]+ " " +p[2]);
+	});
+
+	$('#rand').mousemove(function(e) {
+    var pos = findPos(this);
+    var x = e.pageX - pos.x;
+    var y = e.pageY - pos.y;
+    var coord = "x=" + x + ", y=" + y;
+    var c = this.getContext('2d');
+    var p = c.getImageData(x, y, 1, 1).data; 
+    var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+    $('#rgb_color').html(coord + "<br>" + hex +"<br>" +p[0] + " " + [1]+ " " +p[2]);
+	});
+</script>
+
+<script>
+	function draw_image(){
+var img = new Image();
+img.crossOrigin = 'anonymous';
+img.src = './Assets/benson-hall.jpg';
+img.onload = function() {
+  draw(this);
+};
+}
+
+function draw(img) {
+	var myCanvas = $("#canvas");
+	var ctx = myCanvas[0].getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  var smoothedZoomCtx = document.getElementById('smoothed-zoom').getContext('2d');
+  smoothedZoomCtx.imageSmoothingEnabled = true;
+  smoothedZoomCtx.mozImageSmoothingEnabled = true;
+  smoothedZoomCtx.webkitImageSmoothingEnabled = true;
+  smoothedZoomCtx.msImageSmoothingEnabled = true;
+
+  var pixelatedZoomCtx = document.getElementById('pixelated-zoom').getContext('2d');
+  pixelatedZoomCtx.imageSmoothingEnabled = false;
+  pixelatedZoomCtx.mozImageSmoothingEnabled = false;
+  pixelatedZoomCtx.webkitImageSmoothingEnabled = false;
+  pixelatedZoomCtx.msImageSmoothingEnabled = false;
+
+  var zoom = function(ctx, x, y) {
+    ctx.drawImage(canvas,
+        Math.min(Math.max(0, x - 5), img.width - 10),
+        Math.min(Math.max(0, y - 5), img.height - 10),
+        10, 10,
+        0, 0,
+        200, 200);
+  };
+
+  canvas.addEventListener('mousemove', function(event) {
+    const x = event.layerX;
+    const y = event.layerY;
+    zoom(smoothedZoomCtx, x, y);
+    zoom(pixelatedZoomCtx, x, y);
+  });
+}
+function ppm_buffer_to_canvas(buffer){
+	var MEM = buffer
+	var canvas = $("#ppm");
+	var ctx = canvas[0].getContext("2d");
+	init(MEM)
+}
+
+function to_write_color(data_stream) {
+	data_stream.forEach(function(array){
+		array.forEach(function(val){
+			val.r *= 255.999;
+			val.g *= 255.999;
+			val.b *= 255.999;
+		})
+	});
+	return data_stream
+}
+
+
+function ppm_Array_to_canvas(data, id){
+		console.log(data)
+		data = to_write_color(data);
+		var c2 = document.getElementById(id);
+		var ctx2 = c2.getContext("2d");
+
+		var c1 = document.createElement("canvas");
+		c1.width = data.length;
+		c1.height = data[0].length;
+		var ctx1 = c1.getContext("2d");
+
+		var imgData = ctx1.createImageData(data.length, data[0].length);
+		skipper_y = data.length*4;
+		for (var i=0; i<imgData.data.length; i+=4) {
+			var x = (i/4)%data.length; 
+			var y = Math.floor(i/skipper_y); 
+			// console.log("x" + x + "y"+y)
+			imgData.data[i] = data[x][y].r; 
+			imgData.data[i+1] = data[x][y].g; 
+			imgData.data[i+2] = data[x][y].b; 
+			imgData.data[i+3] = 255; 
+		}
+		ctx1.putImageData(imgData, 0, 0);
+
+		c2.width = 500;
+		c2.height = 500;
+
+		ctx2.mozImageSmoothingEnabled = false;
+		ctx2.webkitImageSmoothingEnabled = false;
+		ctx2.msImageSmoothingEnabled = false;
+		ctx2.imageSmoothingEnabled = false;
+		ctx2.drawImage(c1, 0, 0, 500, 500);
+}
+
+
+function ppm_rand_to_canvas(id){
+		var c2 = document.getElementById(id);
+		var ctx2 = c2.getContext("2d");
+
+		var c1 = document.createElement("canvas");
+		c1.width = 256;
+		c1.height = 256;
+		var ctx1 = c1.getContext("2d");
+
+		var imgData = ctx1.createImageData(256, 256);
+		skipper_y = 256*4;
+		for (var i=0; i<imgData.data.length; i+=4) {
+			var x = (i/4)%256; 
+			var y = Math.floor(i/skipper_y); 
+			// console.log("x" + x + "y"+y)
+			imgData.data[i] = Math.floor(Math.random() * 256); 
+			imgData.data[i+1] = Math.floor(Math.random() * 256); 
+			imgData.data[i+2] = Math.floor(Math.random() * 256); 
+			imgData.data[i+3] = 255; 
+		}
+		ctx1.putImageData(imgData, 0, 0);
+
+		c2.width = 500;
+		c2.height = 500;
+
+		ctx2.mozImageSmoothingEnabled = false;
+		ctx2.webkitImageSmoothingEnabled = false;
+		ctx2.msImageSmoothingEnabled = false;
+		ctx2.imageSmoothingEnabled = false;
+		ctx2.drawImage(c1, 0, 0, 500, 500);
+}
+
+
+function ppm_order_to_canvas(id){
+		var c2 = document.getElementById(id);
+		var ctx2 = c2.getContext("2d");
+
+		var c1 = document.createElement("canvas");
+		c1.width = 256;
+		c1.height = 256;
+		var ctx1 = c1.getContext("2d");
+
+		var imgData = ctx1.createImageData(256, 256);
+		skipper_y = 256*4;
+		for (var i=0; i<imgData.data.length; i+=4) {
+			var x = (i/4)%256; 
+			var y = Math.floor(i/skipper_y); 
+
+			r = x / (256-1);
+            g = y / (256-1);
+            b = 0.55;
+			// console.log("x" + x + "y"+y)
+			imgData.data[i] = Math.floor(r*255.99); 
+			imgData.data[i+1] = Math.floor(g*255.99); 
+			imgData.data[i+2] = Math.floor(b*255.99); 
+			imgData.data[i+3] = 255; 
+		}
+		ctx1.putImageData(imgData, 0, 0);
+
+		c2.width = 500;
+		c2.height = 500;
+
+		ctx2.mozImageSmoothingEnabled = false;
+		ctx2.webkitImageSmoothingEnabled = false;
+		ctx2.msImageSmoothingEnabled = false;
+		ctx2.imageSmoothingEnabled = false;
+		ctx2.drawImage(c1, 0, 0, 500, 500);
+}
+
+
+function findPos(obj) {
+    var curleft = 0, curtop = 0;
+    if (obj.offsetParent) {
+        do {
+            curleft += obj.offsetLeft;
+            curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+        return { x: curleft, y: curtop };
+    }
+    return undefined;
+}
+
+function rgbToHex(r, g, b) {
+    if (r > 255 || g > 255 || b > 255)
+        throw "Invalid color component";
+    return ((r << 16) | (g << 8) | b).toString(16);
 }
 </script>
 </body>

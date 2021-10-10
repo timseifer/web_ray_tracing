@@ -1,3 +1,5 @@
+
+
 #response{
     background-color: #f2c94c;
     text-align: center;  
@@ -8,4 +10,97 @@
     font-size: medium;
     font-stretch: expanded;
     letter-spacing: .75px;
+}
+
+#num_raycasts{
+	text-align: center;
+	color: white;
+}
+
+#explanation{
+	color: white;
+	text-align: center;
+	padding: 3%;
+	font-size: 20px;
+	font-family: 'Hahmlet', serif;
+}
+
+#rgb_color{
+	color: white;
+	text-align: center;
+	padding: 1%;
+	font-size: 15px;
+	font-family: 'Hahmlet', serif;
+}
+
+#rgb_color_two{
+	color: white;
+	text-align: center;
+	padding: 1%;
+	font-size: 15px;
+	font-family: 'Hahmlet', serif;
+}
+
+#rgb_color_three{
+	color: white;
+	text-align: center;
+	padding: 1%;
+	font-size: 15px;
+	font-family: 'Hahmlet', serif;
+}
+#rgb_color_four{
+	color: white;
+	text-align: center;
+	padding: 1%;
+	font-size: 15px;
+	font-family: 'Hahmlet', serif;
+}
+#explanation_smaller{
+	color: white;
+	text-align: center;
+	padding: 1%;
+	font-size: 15px;
+	font-family: 'Hahmlet', serif;
+}
+#background{
+	background-color: black;
+	padding:1%;
+}
+
+h1{
+	font-family: 'Hahmlet', serif; font-size: 50px; text-align: center; color:white;
+}
+
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 800px;
+	border:10px solid #ffffff;
+}
+
+button {
+	background-color: white;
+	color: black;
+	text-align: center;
+	font-family: 'Hahmlet', serif;
+	font-weight: bold;
+	font-size: 12px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 300px;
+	height:50px;
+	padding-bottom: 1%;
+	border-radius: 15px;
+	box-shadow: 0 9px #ffff;
+	
+}
+
+section{
+	align-items: normal;
 }
