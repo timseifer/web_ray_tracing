@@ -2,7 +2,7 @@
 	"name": "pure-js-ray-tracing",
 	"version": "1.0.0",
 	"description": "Vandy Hacks 2021",
-	"main": "main.js",
+	"main": "server.js",
 	"dependencies": {
 		"body-parser": "^1.19.0",
 		"express": "^4.17.1",
@@ -14,7 +14,7 @@
 	},
 	"devDependencies": {},
 	"scripts": {
-		"start": "node main.js",
+		"start": "node server.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
